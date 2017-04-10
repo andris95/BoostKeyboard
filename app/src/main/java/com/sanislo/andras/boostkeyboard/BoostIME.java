@@ -186,6 +186,10 @@ public class BoostIME extends InputMethodService implements KeyboardView.OnKeybo
         // to support CommitContent API, it is important to have a clear spec about what
         // applications are going to be allowed to access the content that your are going to share.
         final int flag;
+        /**
+         * explenation:
+         * developer.android.com/guide/topics/text/image-keyboard.html
+         */
         if (Build.VERSION.SDK_INT >= 25) {
             // On API 25 and later devices, as an analogy of Intent.FLAG_GRANT_READ_URI_PERMISSION,
             // you can specify InputConnectionCompat.INPUT_CONTENT_GRANT_READ_URI_PERMISSION to give
