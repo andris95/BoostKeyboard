@@ -222,9 +222,7 @@ public class BoostIME extends InputMethodService implements KeyboardView.OnKeybo
                 flag, null);
     }
 
-    /**
-     * Що це таке, навіщо це робити?
-     * */
+    //TODO investigate this // read more about this
     private boolean validatePackageName(@Nullable EditorInfo editorInfo) {
         if (editorInfo == null) {
             return false;
@@ -242,9 +240,11 @@ public class BoostIME extends InputMethodService implements KeyboardView.OnKeybo
         // [1]: https://android.googlesource.com/platform/frameworks/base/+/a0f3ad1b5aabe04d9eb1df8bad34124b826ab641
         // [2]: https://android.googlesource.com/platform/frameworks/base/+/02df328f0cd12f2af87ca96ecf5819c8a3470dc8
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            Log.d(TAG, "validatePackageName: returning true before checking possible packages");
             return true;
         }
 
+        //TODO InputBinding class: Information given to an InputMethod about a client connecting to it.
         final InputBinding inputBinding = getCurrentInputBinding();
         if (inputBinding == null) {
             // Due to b.android.com/225029, it is possible that getCurrentInputBinding() returns
@@ -264,11 +264,13 @@ public class BoostIME extends InputMethodService implements KeyboardView.OnKeybo
             } catch (Exception e) {
                 return false;
             }
+            Log.d(TAG, "validatePackageName: returning true before checking possible packages");
             return true;
         }
 
         final PackageManager packageManager = getPackageManager();
         final String possiblePackageNames[] = packageManager.getPackagesForUid(packageUid);
+        Log.d(TAG, "validatePackageName: possiblePackageNames: " + possiblePackageNames);
         for (final String possiblePackageName : possiblePackageNames) {
             if (packageName.equals(possiblePackageName)) {
                 return true;
