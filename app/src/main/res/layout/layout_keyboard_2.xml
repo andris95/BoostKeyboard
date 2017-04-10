@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+    <android.inputmethodservice.KeyboardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/keyboard"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:keyPreviewLayout="@layout/layout_key_preview">
+    </android.inputmethodservice.KeyboardView>
+
+    <LinearLayout
+        android:id="@+id/ll_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        tools:visibility="visible"
+        android:visibility="gone"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/tv_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="This edit input does not support images from keyboard"/>
+        <Button
+            android:id="@+id/btn_boost"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Boost Logo"/>
+        <Button
+            android:id="@+id/btn_android"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Android"/>
+        <Button
+            android:id="@+id/btn_abc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="abc"/>
+    </LinearLayout>
+</RelativeLayout>

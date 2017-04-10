@@ -93,7 +93,6 @@ public class MainActivity extends AppCompatActivity {
         if (linkUri == null) {
             linkUri = inputContentInfo.getContentUri();
         }
-        Toast.makeText(getApplicationContext(), "uri null? " + (linkUri == null), Toast.LENGTH_LONG).show();
         Glide.with(this)
                 .load(linkUri)
                 .listener(new RequestListener<Uri, GlideDrawable>() {

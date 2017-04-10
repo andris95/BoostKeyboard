@@ -47,6 +47,12 @@ public class BoostIME extends InputMethodService implements KeyboardView.OnKeybo
     private File mBoostLogo;
     private File mAndroid;
 
+    private KeyboardView mKeyboardView;
+    private Keyboard mKeyboard;
+    private RelativeLayout rootView;
+    private LinearLayout llContainer;
+    private Button btnABC;
+
     private static final String AUTHORITY = "com.sanislo.andras.boostkeyboard";
     private static final String MIME_TYPE_GIF = "image/gif";
     private static final String MIME_TYPE_PNG = "image/png";
@@ -81,32 +87,53 @@ public class BoostIME extends InputMethodService implements KeyboardView.OnKeybo
     @Override
     public View onCreateInputView() {
         Log.d(TAG, "onCreateInputView: ");
-        tvStatus = new TextView(this);
-        tvStatus.setText("The EditText does not support images from any keyboard!");
-        //tvStatus.setVisibility(View.GONE);
+        //return inflateKeyboardLayout();
+        rootView = (RelativeLayout) getLayoutInflater().inflate(R.layout.layout_keyboard_2, null);
+        llContainer = (LinearLayout) rootView.findViewById(R.id.ll_container);
+        llContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getApplicationContext(), "on click container", Toast.LENGTH_SHORT).show();
+            }
+        });
+        setupButtons();
+        setupKeyboardView();
+        return rootView;
+    }
 
-        mBoostButton = new Button(this);
-        mBoostButton.setText("BoostSolutions Logo");
+    private void setupKeyboardView() {
+        mKeyboard = new Keyboard(this, R.xml.qwerty);
+        //mKeyboardView = (KeyboardView) getLayoutInflater().inflate(R.layout.layout_keyboard, null);
+        mKeyboardView = (KeyboardView) rootView.findViewById(R.id.keyboard);
+        mKeyboardView.setKeyboard(mKeyboard);
+        mKeyboardView.setOnKeyboardActionListener(this);
+    }
+
+    private void setupButtons() {
+        tvStatus = (TextView) llContainer.findViewById(R.id.tv_status);
+        tvStatus.setText("The EditText does not support images from any keyboard!");
+
+        mBoostButton = (Button) rootView.findViewById(R.id.btn_boost);
         mBoostButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 BoostIME.this.doCommitContent("A droid logo", MIME_TYPE_PNG, mBoostLogo);
             }
         });
-        mAndroidButton = new Button(this);
-        mAndroidButton.setText("Android");
+        mAndroidButton = (Button) rootView.findViewById(R.id.btn_android);
         mAndroidButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 BoostIME.this.doCommitContent("A droid logo", MIME_TYPE_PNG, mAndroid);
             }
         });
-        LinearLayout linearLayout = new LinearLayout(this);
-        linearLayout.setOrientation(LinearLayout.VERTICAL);
-        linearLayout.addView(tvStatus);
-        linearLayout.addView(mBoostButton);
-        linearLayout.addView(mAndroidButton);
-        return linearLayout;
+        btnABC = (Button) rootView.findViewById(R.id.btn_abc);
+        btnABC.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                swapVisibleView(true);
+            }
+        });
     }
 
     @Override
@@ -115,10 +142,8 @@ public class BoostIME extends InputMethodService implements KeyboardView.OnKeybo
         Log.d(TAG, "onStartInputView: ");
         boolean isPngMimeTypeSupported = isCommitContentSupported(info, MIME_TYPE_PNG);
         tvStatus.setVisibility(isPngMimeTypeSupported ? View.GONE : View.VISIBLE);
-        //if (!isPngMimeTypeSupported) makeToast("The EditText does not support images from any keyboard!");
         mAndroidButton.setEnabled(mAndroid != null && isPngMimeTypeSupported);
         mBoostButton.setEnabled(mBoostButton != null && isPngMimeTypeSupported);
-        //mWebpButton.setEnabled(mWebpFile != null && isCommitContentSupported(info, MIME_TYPE_WEBP));
     }
 
     @Override
@@ -137,9 +162,42 @@ public class BoostIME extends InputMethodService implements KeyboardView.OnKeybo
 
     }
 
+    public static final int KEY_TEST_IME_SUPPORT = -2;
     @Override
     public void onKey(int primaryCode, int[] keyCodes) {
+        InputConnection ic = getCurrentInputConnection();
+        switch (primaryCode) {
+            case KEY_TEST_IME_SUPPORT:
+                swapVisibleView(false);
+                break;
+            case Keyboard.KEYCODE_DELETE :
+                ic.deleteSurroundingText(1, 0);
+                break;
+            case Keyboard.KEYCODE_SHIFT:
+                caps = !caps;
+                mKeyboard.setShifted(caps);
+                mKeyboardView.invalidateAllKeys();
+                break;
+            case Keyboard.KEYCODE_DONE:
+                ic.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_ENTER));
+                break;
+            default:
+                char code = (char) primaryCode;
+                if (Character.isLetter(code) && caps) {
+                    code = Character.toUpperCase(code);
+                }
+                ic.commitText(String.valueOf(code), 1);
+        }
+    }
 
+    private void swapVisibleView(boolean makeKeyboardVisible) {
+        if (makeKeyboardVisible) {
+            mKeyboardView.setVisibility(View.VISIBLE);
+            llContainer.setVisibility(View.GONE);
+        } else {
+            mKeyboardView.setVisibility(View.GONE);
+            llContainer.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
