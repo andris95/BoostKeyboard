@@ -17,6 +17,10 @@ public class BoostIME extends InputMethodService implements KeyboardView.OnKeybo
     private KeyboardView mKeyboardView;
     private Keyboard mKeyboard;
 
+    private static final String AUTHORITY = "com.sanislo.andras.boostkeyboard";
+    private static final String MIME_TYPE_GIF = "image/gif";
+    private static final String MIME_TYPE_PNG = "image/png";
+    private static final String MIME_TYPE_WEBP = "image/webp";
     private boolean caps = false;
 
     @Override
@@ -79,6 +83,7 @@ public class BoostIME extends InputMethodService implements KeyboardView.OnKeybo
     @Override
     public void onKey(int primaryCode, int[] keyCodes) {
         InputConnection ic = getCurrentInputConnection();
+        Log.d(TAG, "onKey: primaryCode: " + primaryCode + " keyCodes: " + keyCodes);
         //TODO play sound on key tap
         //playClick(primaryCode);
         switch (primaryCode) {
@@ -92,6 +97,9 @@ public class BoostIME extends InputMethodService implements KeyboardView.OnKeybo
                 break;
             case Keyboard.KEYCODE_DONE:
                 ic.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_ENTER));
+                break;
+            case 113:
+                ic.commitText("\ud83d\ude01", 1);
                 break;
             default:
                 char code = (char) primaryCode;

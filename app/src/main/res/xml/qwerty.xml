@@ -16,9 +16,9 @@
         <Key android:codes="48" android:keyLabel="0" android:keyEdgeFlags="right" android:iconPreview="@drawable/keyboard"/>
     </Row>
     <Row>
-        <Key android:codes="113" android:keyLabel="\xF0\x9F\x98\x81" android:keyEdgeFlags="left"/>
-        <Key android:codes="119" android:keyLabel="w"/>
-        <Key android:codes="101" android:keyLabel="e"/>
+        <Key android:codes="113" android:keyLabel="😁" android:keyEdgeFlags="left"/>
+        <Key android:codes="119" android:keyLabel="w" android:keyIcon="@drawable/hi" android:iconPreview="@drawable/hi"/>
+        <Key android:codes="101" android:keyLabel="e" android:iconPreview="@drawable/account_plus"/>
         <Key android:codes="114" android:keyLabel="r"/>
         <Key android:codes="116" android:keyLabel="t"/>
         <Key android:codes="121" android:keyLabel="y"/>
