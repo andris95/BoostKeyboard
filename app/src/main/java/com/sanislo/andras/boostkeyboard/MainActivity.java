@@ -89,12 +89,26 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "onCommitContentInternal: 1 " + inputContentInfo.getContentUri());
         Log.d(TAG, "onCommitContentInternal: 2 " + inputContentInfo.getDescription());
         Log.d(TAG, "onCommitContentInternal: 3 " + inputContentInfo.getLinkUri());
-        Uri linkUri = inputContentInfo.getLinkUri();
-        if (linkUri == null) {
-            linkUri = inputContentInfo.getContentUri();
+        Uri uri = inputContentInfo.getLinkUri();
+        if (uri == null) {
+            uri = inputContentInfo.getContentUri();
         }
+        displayImage(uri);
+
+        // Due to the asynchronous nature of WebView, it is a bit too early to call
+        // inputContentInfo.releasePermission() here. Hence we call IC#releasePermission() when this
+        // method is called next time.  Note that calling IC#releasePermission() is just to be a
+        // good citizen. Even if we failed to call that method, the system would eventually revoke
+        // the permission sometime after inputContentInfo object gets garbage-collected.
+        mCurrentInputContentInfo = inputContentInfo;
+        mCurrentFlags = flags;
+
+        return true;
+    }
+
+    private void displayImage(Uri uri) {
         Glide.with(this)
-                .load(linkUri)
+                .load(uri)
                 .listener(new RequestListener<Uri, GlideDrawable>() {
                     @Override
                     public boolean onException(Exception e, Uri model, Target<GlideDrawable> target, boolean isFirstResource) {
@@ -108,16 +122,6 @@ public class MainActivity extends AppCompatActivity {
                     }
                 })
                 .into(ivTest);
-
-        // Due to the asynchronous nature of WebView, it is a bit too early to call
-        // inputContentInfo.releasePermission() here. Hence we call IC#releasePermission() when this
-        // method is called next time.  Note that calling IC#releasePermission() is just to be a
-        // good citizen. Even if we failed to call that method, the system would eventually revoke
-        // the permission sometime after inputContentInfo object gets garbage-collected.
-        mCurrentInputContentInfo = inputContentInfo;
-        mCurrentFlags = flags;
-
-        return true;
     }
 
     /**
@@ -158,8 +162,6 @@ public class MainActivity extends AppCompatActivity {
             }
         };
         exitText.setHint(hintText);
-        //exitText.setTextColor(Color.WHITE);
-        //exitText.setHintTextColor(Color.WHITE);
         return exitText;
     }
 }

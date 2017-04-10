@@ -37,9 +37,6 @@ import java.io.OutputStream;
 
 public class BoostIME extends InputMethodService implements KeyboardView.OnKeyboardActionListener {
     private static final String TAG = BoostIME.class.getSimpleName();
-    //private RelativeLayout mKeyboardRootView;
-    //private KeyboardView mKeyboardView;
-    //private Keyboard mKeyboard;
 
     private TextView tvStatus;
     private Button mBoostButton;
@@ -87,7 +84,6 @@ public class BoostIME extends InputMethodService implements KeyboardView.OnKeybo
     @Override
     public View onCreateInputView() {
         Log.d(TAG, "onCreateInputView: ");
-        //return inflateKeyboardLayout();
         rootView = (RelativeLayout) getLayoutInflater().inflate(R.layout.layout_keyboard_2, null);
         llContainer = (LinearLayout) rootView.findViewById(R.id.ll_container);
         llContainer.setOnClickListener(new View.OnClickListener() {
@@ -193,9 +189,9 @@ public class BoostIME extends InputMethodService implements KeyboardView.OnKeybo
     private void swapVisibleView(boolean makeKeyboardVisible) {
         if (makeKeyboardVisible) {
             mKeyboardView.setVisibility(View.VISIBLE);
-            llContainer.setVisibility(View.GONE);
+            llContainer.setVisibility(View.INVISIBLE);
         } else {
-            mKeyboardView.setVisibility(View.GONE);
+            mKeyboardView.setVisibility(View.INVISIBLE);
             llContainer.setVisibility(View.VISIBLE);
         }
     }
