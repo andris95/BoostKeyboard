@@ -39,8 +39,8 @@ public class MainActivity extends AppCompatActivity {
         mLinearLayout = (LinearLayout) findViewById(R.id.ll_root);
         ivTest = (ImageView) findViewById(R.id.iv_test);
         edtTest = (EditText)findViewById(R.id.edt_test);
-        edtTest.setHint("does not support IME gif/image*s");
-        edtTest.getText().append("\ud83d\ude01");
+        edtTest.setText("This EditText does not support images from any keyboard!");
+        //edtTest.getText().append("This editText does not support images from any keyboard!");
 
         String[] imageMimeTypes = new String[] {"image/png",
                 "image/jpeg"};
